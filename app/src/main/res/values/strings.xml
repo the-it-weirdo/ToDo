@@ -6,5 +6,5 @@
     <string name="uNameHint">Enter your E-Mail</string>
     <string name="passHint">Enter your password</string>
     <string name="loginButtonText">Login</string>
-    <string name="signUpButtonText">Sign-Up</string>
+    <string name="signUpButtonText">Don\'t have an account? Sign-Up</string>
 </resources>

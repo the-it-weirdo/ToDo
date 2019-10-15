@@ -7,7 +7,7 @@
     android:background="@color/ultraLightGrey"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".SignUpActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,11 +20,11 @@
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
             android:focusable="true"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:padding="10dp"
             app:cardCornerRadius="35dp">
 
-            <include layout="@layout/login_include" />
+            <include layout="@layout/signup_include" />
 
         </com.google.android.material.card.MaterialCardView>
     </ScrollView>

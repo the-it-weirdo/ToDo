@@ -2,9 +2,15 @@
     <string name="app_name">To Do</string>
 
 
-    <!--LoginActivity-->
+    <!--LoginActivity & SignUpActivity-->
     <string name="uNameHint">Enter your E-Mail</string>
     <string name="passHint">Enter your password</string>
     <string name="loginButtonText">Login</string>
     <string name="signUpButtonText">Don\'t have an account? Sign-Up</string>
+
+    <!--SignUpActivity-->
+    <string name="nameHint">Enter your first name</string>
+    <string name="rePassHint">Re-enter your password</string>
+    <string name="signUpButton">Sign Up</string>
+    <string name="loginButton">Already have an account ? Login</string>
 </resources>

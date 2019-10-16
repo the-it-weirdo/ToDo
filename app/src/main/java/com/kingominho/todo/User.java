@@ -12,12 +12,22 @@ class User {
     private String userName, userEmail, userPassword;
     private int userId;
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((userEmail == null) ? 0: userEmail.hashCode());
+        result = prime * result + ((userName == null) ? 0: userName.hashCode());
+        result = prime * result + ((userPassword == null) ? 0: userPassword.hashCode());
+        return result;
+    }
+
     User(String userEmail, String userName, String userPassword)
     {
         this.userEmail = userEmail;
         this.userName = userName;
         this.userPassword = userPassword;
-        this.userId = (userEmail + userName).hashCode();
+        this.userId = this.hashCode();
     }
 
     public int getUserId() {

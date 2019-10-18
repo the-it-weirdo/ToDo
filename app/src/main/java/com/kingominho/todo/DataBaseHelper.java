@@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String userIdColumn = "UserId";
     public static final String userNameColumn = "UserName";
     public static final String userEmailColumn = "UserEmail";
-    public static final String userUserPasswordColumn = "UserPassword";
+    public static final String userPasswordColumn = "UserPassword";
 
 
 
@@ -43,7 +43,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sqlQueryToCreateTaskTable);
 
         String sqlQueryToCreateUserTable = "CREATE TABLE " + userTableName + "(" + userDbIdColumn + " INTEGER PRIMARY KEY AUTOINCREMENT," + userIdColumn + " TEXT," +
-                userNameColumn+ " TEXT," + userEmailColumn + " TEXT," + userUserPasswordColumn + " TEXT)";
+                userNameColumn+ " TEXT," + userEmailColumn + " TEXT," + userPasswordColumn + " TEXT)";
         sqLiteDatabase.execSQL(sqlQueryToCreateUserTable);
     }
 
@@ -153,10 +153,62 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put(userIdColumn, String.valueOf(user.getUserId()));
         contentValues.put(userNameColumn, user.getUserName());
         contentValues.put(userEmailColumn, user.getUserEmail());
-        contentValues.put(userUserPasswordColumn, user.getUserPassword());
+        contentValues.put(userPasswordColumn, user.getUserPassword());
 
         long res = database.insert(userTableName, null, contentValues);
         return res > 0;
     }
+
+    public boolean updateUser(@NotNull User user)
+    {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        int userId = user.getUserId();
+
+        /*NOTE: User can only update password. Try removing the update from other fields.*/
+        contentValues.put(userIdColumn, String.valueOf(user.getUserId()));
+        contentValues.put(userNameColumn, user.getUserName());
+        contentValues.put(userEmailColumn, user.getUserEmail());
+        contentValues.put(userPasswordColumn, user.getUserPassword());
+
+        long res = database.update(userTableName, contentValues, userIdColumn+"=?", new String[] {String.valueOf(userId).trim()});
+        return res > 0;
+    }
+
+    public Cursor getUser(int userId)
+    {
+        SQLiteDatabase db=this.getWritableDatabase();
+        final String query = "select * from "+userTableName+" where "+userIdColumn+"='"+String.valueOf(userId).trim()+"'";
+        Cursor res=db.rawQuery(query,null);
+        return res;
+    }
+
+    public Cursor getUser(String userName, String userPassword)
+    {
+        SQLiteDatabase database = this.getWritableDatabase();
+        final String query = "select * from "+userTableName+" where "+userNameColumn+"='"+userName+"' and "+userPasswordColumn+"='"+
+                userPassword+"'";
+        Cursor res = database.rawQuery(query, null);
+        return res;
+    }
+
+    public Cursor getUser(String userName)
+    {
+        SQLiteDatabase database = this.getWritableDatabase();
+        final String query = "select * from "+userTableName+" where "+userNameColumn+"='"+userName+"'";
+        Cursor res = database.rawQuery(query, null);
+        return res;
+    }
+
+    public boolean deleteUser(int userId)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long res = db.delete(userTableName, userIdColumn + "=?", new String[]{String.valueOf(userId).trim()});
+
+        return res > 0;
+    }
+
+    /*userTable end*/
 
 }

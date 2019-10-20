@@ -15,8 +15,9 @@ class Task {
     private int taskId;
     private boolean taskCompleted;
 
-    @Override
-    public int hashCode() {
+
+    private int getHashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((taskTitle == null) ? 0: taskTitle.hashCode());
@@ -27,7 +28,17 @@ class Task {
 
     Task(String tTITLE, boolean isCompleted, String uID, String category)
     {
-        this.taskId = this.hashCode();
+        this.taskId = this.getHashCode();
+        this.taskTitle = tTITLE;
+        this.taskCompleted = isCompleted;
+        this.userId = uID;
+        this.taskCategory = category;
+
+    }
+
+    Task(Integer taskId, String tTITLE, boolean isCompleted, String uID, String category)
+    {
+        this.taskId = Integer.valueOf(taskId);
         this.taskTitle = tTITLE;
         this.taskCompleted = isCompleted;
         this.userId = uID;

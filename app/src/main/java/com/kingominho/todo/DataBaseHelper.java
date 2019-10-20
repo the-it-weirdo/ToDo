@@ -134,6 +134,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getTask(String taskUserId, String taskCategory, boolean isCompleted)
+    {
+        int flag;
+        if(isCompleted)
+            flag = 1;
+        else
+            flag = 0;
+
+        SQLiteDatabase db=this.getWritableDatabase();
+        final String query = "select * from "+taskTableName+" where "+taskUserIdColumn+"='"+taskUserId.trim()+"' and "
+                +taskCategoryColumn+"='"+taskCategory.trim()+"' and " +taskCompletedColumn+"='"+flag+"'";
+        Cursor res=db.rawQuery(query,null);
+        return res;
+    }
+
     public boolean deleteTask(int taskId)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -184,10 +199,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getUser(String userName, String userPassword)
+    public Cursor getUser(String userEmail, String userPassword)
     {
         SQLiteDatabase database = this.getWritableDatabase();
-        final String query = "select * from "+userTableName+" where "+userNameColumn+"='"+userName+"' and "+userPasswordColumn+"='"+
+        final String query = "select * from "+userTableName+" where "+userEmailColumn+"='"+userEmail+"' and "+userPasswordColumn+"='"+
                 userPassword+"'";
         Cursor res = database.rawQuery(query, null);
         return res;
@@ -196,7 +211,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Cursor getUser(String userName)
     {
         SQLiteDatabase database = this.getWritableDatabase();
-        final String query = "select * from "+userTableName+" where "+userNameColumn+"='"+userName+"'";
+        final String query = "select * from "+userTableName+" where "+userEmailColumn+"='"+userName+"'";
         Cursor res = database.rawQuery(query, null);
         return res;
     }
@@ -210,5 +225,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /*userTable end*/
+
+
 
 }

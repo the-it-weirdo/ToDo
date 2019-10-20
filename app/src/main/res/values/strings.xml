@@ -2,6 +2,8 @@
     <string name="app_name">To Do</string>
 
 
+    <string name="pressBackTwice">Press BACK again to exit.</string>
+
     <!--LoginActivity & SignUpActivity-->
     <string name="uNameHint">Enter your E-Mail</string>
     <string name="passHint">Enter your password</string>
@@ -13,4 +15,10 @@
     <string name="rePassHint">Re-enter your password</string>
     <string name="signUpButton">Sign Up</string>
     <string name="loginButton">Already have an account ? Login</string>
+
+    <!--CategoryNames-->
+    <string-array name="categoryNames">
+        <item>Home</item>
+        <item>Work</item>
+    </string-array>
 </resources>

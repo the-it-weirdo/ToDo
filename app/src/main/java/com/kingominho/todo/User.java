@@ -4,16 +4,16 @@ import android.os.Bundle;
 
 class User {
 
-    final String USERID_KEY = "USER_ID";
-    final String USER_NAME_KEY = "USER_NAME";
-    final String USER_EMAIL_KEY = "USER_EMAIL";
-    final String USER_PASSWORD_KEY = "USER_PASSWORD";
+    final static String USERID_KEY = "USER_ID";
+    final static String USER_NAME_KEY = "USER_NAME";
+    final static String USER_EMAIL_KEY = "USER_EMAIL";
+    final static String USER_PASSWORD_KEY = "USER_PASSWORD";
 
     private String userName, userEmail, userPassword;
     private int userId;
 
-    @Override
-    public int hashCode() {
+    private int getHashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((userEmail == null) ? 0: userEmail.hashCode());
@@ -27,7 +27,15 @@ class User {
         this.userEmail = userEmail;
         this.userName = userName;
         this.userPassword = userPassword;
-        this.userId = this.hashCode();
+        this.userId = this.getHashCode();
+    }
+
+    User(Integer userId, String userEmail, String userName)
+    {
+        this.userEmail = userEmail;
+        this.userName = userName;
+        this.userId = Integer.valueOf(userId);
+        this.userPassword = null;
     }
 
     public int getUserId() {

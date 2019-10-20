@@ -3,15 +3,19 @@ package com.kingominho.todo;
 import android.animation.ArgbEvaluator;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SwipeMenuActivity extends AppCompatActivity implements Adapter.AdapterOnCardClickListener{
     ViewPager viewPager;
@@ -19,6 +23,12 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
     List<CategoryModel> models;
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+
+    TextView mUserNameTextView;
+
+    private int noOfCategories;
+    private User user;
+    private DataBaseHelper dataBaseHelper;
 
     private boolean mBackPressedOnce;
     private Handler mHandler = new Handler();
@@ -36,35 +46,55 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swipe_menu);
 
-        String[] menuTitle = getResources().getStringArray(R.array.menu_array);
+        mUserNameTextView = (TextView) findViewById(R.id.userName);
 
-        String[] menuDesc = getResources().getStringArray(R.array.menu_desc_array);
+        dataBaseHelper = new DataBaseHelper(getApplicationContext());
 
-        TypedArray imgTypedArray = getResources().obtainTypedArray(R.array.menu_icons);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null)
+        {
+            Integer userId = bundle.getInt(User.USERID_KEY);
+            String userName = bundle.getString(User.USER_NAME_KEY);
+            String userEmail = bundle.getString(User.USER_EMAIL_KEY);
+            user = new User(userId, userEmail, userName);
+        }
+        else
+        {
+            user = new User(0, "Test", "Test");
+        }
+        mUserNameTextView.setText(user.getUserName());
+
+
+        //Loading the category Names
+        String[] categoryNames = getResources().getStringArray(R.array.categoryNames);
+        noOfCategories = categoryNames.length;
+
+        //Loading the remaining tasks counts
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        for(String categoryName : categoryNames)
+        {
+            map.put(categoryName, 0);
+            Cursor queryResult = dataBaseHelper.getTask(String.valueOf(user.getUserId()).trim(), categoryName.trim(), false);
+            while(queryResult.moveToNext())
+            {
+                map.put(categoryName, map.get(categoryName) + 1);
+            }
+        }
+
+        //loading the category icons
+        TypedArray imgTypedArray = getResources().obtainTypedArray(R.array.categoryIcons);
         int[] iconImageIDs = new int[imgTypedArray.length()];
         for (int i = 0; i < imgTypedArray.length(); i++) {
             iconImageIDs[i] = imgTypedArray.getResourceId(i, -1);
         }
         imgTypedArray.recycle();
 
-        imgTypedArray = getResources().obtainTypedArray(R.array.menu_skins);
-        int[] skinImageIDs = new int[imgTypedArray.length()];
-        for (int i = 0; i < imgTypedArray.length(); i++) {
-            skinImageIDs[i] = imgTypedArray.getResourceId(i, -1);
-        }
-        imgTypedArray.recycle();
-
-        int a2 = (int) Math.pow((menuTitle.length - menuDesc.length), 2);
-        int b2 = (int) Math.pow((iconImageIDs.length - skinImageIDs.length), 2);
-
-        if (a2 - b2 != 0) {
-            throw new RuntimeException("menuTitle.length, menuDesc.length, iconImageIDs.length, skinImageIDs.length must be equal!!");
-        }
-
-        //Model(int icon, int image, String title, String desc)
+        //CategoryModel(int icon, String categoryTitle, String taskRemaining)
+        String appendString = " tasks remaining.";
         models = new ArrayList<>();
-        for (int i = 0; i < menuTitle.length; i++) {
-            models.add(new Model(iconImageIDs[i], skinImageIDs[i], menuTitle[i], menuDesc[i]));
+        for (int i = 0; i < noOfCategories ; i++) {
+            models.add(new CategoryModel(iconImageIDs[i], categoryNames[i],
+                    String.valueOf(map.get(categoryNames[i]))+appendString));
         }
 
         adapter = new Adapter(models, this);
@@ -95,8 +125,10 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
                                     colors[position + 1]
                             )
                     );
+                    mUserNameTextView.setText(user.getUserName());
                 } else {
                     viewPager.setBackgroundColor(colors[colors.length - 1]);
+                    mUserNameTextView.setText(user.getUserName());
                 }
             }
 
@@ -125,7 +157,7 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
         mToast.show();
 
         mHandler.postDelayed(mRunnable, delay);
-        overridePendingTransition(R.anim.go_up, R.anim.go_down);
+        //overridePendingTransition(R.anim.go_up, R.anim.go_down);
     }
 
 
@@ -142,9 +174,12 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
 
     @Override
     public void onCardClick(String param) {
-        Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
+        /*Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("param", param);
-        startActivity(intent);
-        overridePendingTransition(R.anim.go_up, R.anim.go_down);
+        startActivity(intent);*/
+        //overridePendingTransition(R.anim.go_up, R.anim.go_down);
+
+        Toast.makeText(getApplicationContext(), param+" clicked!", Toast.LENGTH_SHORT).show();
     }
+
 }

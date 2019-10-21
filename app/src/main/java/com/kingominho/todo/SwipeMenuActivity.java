@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,16 +20,18 @@ import java.util.Map;
 
 public class SwipeMenuActivity extends AppCompatActivity implements Adapter.AdapterOnCardClickListener{
     ViewPager viewPager;
+    RelativeLayout relativeLayout;
     Adapter adapter;
     List<CategoryModel> models;
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 
-    TextView mUserNameTextView;
 
+    private String greetings;
     private int noOfCategories;
     private User user;
     private DataBaseHelper dataBaseHelper;
+    private TextView mGreetings, mUserNameView;
 
     private boolean mBackPressedOnce;
     private Handler mHandler = new Handler();
@@ -45,8 +48,8 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swipe_menu);
-
-        mUserNameTextView = (TextView) findViewById(R.id.userName);
+        mGreetings = (TextView) findViewById(R.id.greetings);
+        mUserNameView = (TextView) findViewById(R.id.userName);
 
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
 
@@ -62,7 +65,13 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
         {
             user = new User(0, "Test", "Test");
         }
-        mUserNameTextView.setText(user.getUserName());
+
+        //Loading greetings
+        greetings = "Hello, ";
+        mGreetings.setText(greetings);
+
+        //Setting username
+        mUserNameView.setText(user.getUserName());
 
 
         //Loading the category Names
@@ -80,6 +89,7 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
                 map.put(categoryName, map.get(categoryName) + 1);
             }
         }
+
 
         //loading the category icons
         TypedArray imgTypedArray = getResources().obtainTypedArray(R.array.categoryIcons);
@@ -100,14 +110,15 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
         adapter = new Adapter(models, this);
 
         viewPager = findViewById(R.id.viewPager);
+        relativeLayout = findViewById(R.id.relativeLayout);
         viewPager.setAdapter(adapter);
-        viewPager.setPadding(130, 0, 130, 0);
+        viewPager.setPadding(100, 0, 100, 0);
 
         Integer[] colors_temp = {
                 getResources().getColor(R.color.color1),
-                getResources().getColor(R.color.color2),
+                /*getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color3),
-                getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color4),*/
                 getResources().getColor(R.color.color5)
         };
 
@@ -117,7 +128,7 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
-                    viewPager.setBackgroundColor(
+                    relativeLayout.setBackgroundColor(
 
                             (Integer) argbEvaluator.evaluate(
                                     positionOffset,
@@ -125,10 +136,8 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
                                     colors[position + 1]
                             )
                     );
-                    mUserNameTextView.setText(user.getUserName());
                 } else {
-                    viewPager.setBackgroundColor(colors[colors.length - 1]);
-                    mUserNameTextView.setText(user.getUserName());
+                    relativeLayout.setBackgroundColor(colors[colors.length - 1]);
                 }
             }
 

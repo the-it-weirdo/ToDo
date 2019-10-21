@@ -21,6 +21,10 @@ public class Adapter extends PagerAdapter {
 
     private AdapterOnCardClickListener mAdapterOnCardClickListener;
 
+    private ImageView categoryIcon;
+    private TextView categoryTitle, categoryTaskRemaining;
+    private CardView cardView;
+
     public Adapter(List<CategoryModel> models, Context context) {
         this.models = models;
         this.context = context;
@@ -47,10 +51,6 @@ public class Adapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.category_item, container, false);
-
-        ImageView categoryIcon;
-        TextView categoryTitle, categoryTaskRemaining;
-        CardView cardView;
 
 
         cardView = view.findViewById(R.id.cardView);

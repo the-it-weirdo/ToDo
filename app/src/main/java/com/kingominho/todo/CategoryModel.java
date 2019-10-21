@@ -3,8 +3,7 @@ package com.kingominho.todo;
 public class CategoryModel {
 
     private int icon;
-    private String categoryTitle;
-    private String taskRemaining;
+    private String categoryTitle, taskRemaining;
 
     public CategoryModel(int icon, String categoryTitle, String taskRemaining) {
         this.icon = icon;

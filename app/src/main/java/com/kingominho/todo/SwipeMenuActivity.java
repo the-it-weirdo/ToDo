@@ -26,12 +26,16 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 
+    public static final String ITEM_KEY = "CATEGORY_ITEM";
+    public static final String TASK_REMAINING_KEY = "TASK_REMAINING";
 
     private String greetings;
+    private Map<String, Integer> map;
     private int noOfCategories;
     private User user;
     private DataBaseHelper dataBaseHelper;
     private TextView mGreetings, mUserNameView;
+    private Bundle mBundle;
 
     private boolean mBackPressedOnce;
     private Handler mHandler = new Handler();
@@ -53,17 +57,18 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
 
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle!=null)
+        mBundle = getIntent().getExtras();
+        if(mBundle!=null)
         {
-            Integer userId = bundle.getInt(User.USERID_KEY);
-            String userName = bundle.getString(User.USER_NAME_KEY);
-            String userEmail = bundle.getString(User.USER_EMAIL_KEY);
+            Integer userId = mBundle.getInt(User.USERID_KEY);
+            String userName = mBundle.getString(User.USER_NAME_KEY);
+            String userEmail = mBundle.getString(User.USER_EMAIL_KEY);
             user = new User(userId, userEmail, userName);
         }
         else
         {
             user = new User(0, "Test", "Test");
+            mBundle = user.toBundle();
         }
 
         //Loading greetings
@@ -79,7 +84,7 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
         noOfCategories = categoryNames.length;
 
         //Loading the remaining tasks counts
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        map = new HashMap<String, Integer>();
         for(String categoryName : categoryNames)
         {
             map.put(categoryName, 0);
@@ -183,9 +188,11 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
 
     @Override
     public void onCardClick(String param) {
-        /*Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("param", param);
-        startActivity(intent);*/
+        Intent intent = new Intent(getApplicationContext(), ViewCategory.class);
+        mBundle.putString(ITEM_KEY, param);
+        mBundle.putString(TASK_REMAINING_KEY, String.valueOf(map.get(param)));
+        intent.putExtras(mBundle);
+        startActivity(intent);
         //overridePendingTransition(R.anim.go_up, R.anim.go_down);
 
         Toast.makeText(getApplicationContext(), param+" clicked!", Toast.LENGTH_SHORT).show();

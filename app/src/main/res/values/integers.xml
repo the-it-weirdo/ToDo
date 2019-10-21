@@ -4,7 +4,6 @@
     <integer-array name="categoryIcons">
         <item>@drawable/ic_person_f5a110_24dp</item>
         <item>@drawable/ic_work_32b1c4_24dp</item>
-
     </integer-array>
 
 </resources>

@@ -38,7 +38,9 @@ public class ViewCategory extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
         mRecyclerViewRemaining = findViewById(R.id.taskRemainingRecycler);
+        //mRecyclerViewRemaining.setNestedScrollingEnabled(false);
         mRecyclerViewCompleted = findViewById(R.id.taskCompletedRecycler);
+        //mRecyclerViewCompleted.setNestedScrollingEnabled(false);
         categoryName = findViewById(R.id.categoryName);
         remainingTask = findViewById(R.id.taskRemainingCount);
         categoryIcon = findViewById(R.id.categoryIcon);
@@ -75,6 +77,7 @@ public class ViewCategory extends AppCompatActivity {
         }
 
         mTaskListCompleted = makeList(true);
+        //mTaskListCompleted = new ArrayList<Task>();
         mTaskListRemaining = makeList(false);
         mRemainingAdapter = new TaskListAdapter(mTaskListRemaining, getApplicationContext());
         mCompletedAdapter = new TaskListAdapter(mTaskListCompleted, getApplicationContext());
@@ -119,7 +122,7 @@ public class ViewCategory extends AppCompatActivity {
 
     private void buildRecyclerViewRemaining()
     {
-        mRecyclerViewRemaining.setHasFixedSize(true);
+        mRecyclerViewRemaining.setHasFixedSize(false);
         mLayoutManagerRemaining = new LinearLayoutManager(getApplicationContext());
 
         mRecyclerViewRemaining.setLayoutManager(mLayoutManagerRemaining);
@@ -156,16 +159,22 @@ public class ViewCategory extends AppCompatActivity {
         mRemainingAdapter.setOnItemCheckedChangeListener(new TaskListAdapter.OnItemCheckedChange() {
             @Override
             public void onItemChecked(int position, boolean isChecked) {
-                Toast.makeText(getApplicationContext(), "position = "+position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "position = "+position, Toast.LENGTH_SHORT).show();
                 Log.d("position = ", position+".");
-                Task mTask = mTaskListCompleted.get(position);
+                Task mTask = mTaskListRemaining.get(position);
                 mTask.setTaskCompleted(isChecked);
-                if(isChecked)
+                Toast.makeText(getApplicationContext(), mTask.getTaskTitle()+" is "+mTask.isTaskCompleted(), Toast.LENGTH_SHORT).show();
+                if(mTask.isTaskCompleted())
                 {
                     mTaskListCompleted.add(0, mTask);
-                    mTaskListRemaining.remove(position);
-                    mRemainingAdapter.notifyItemRemoved(position);
                     mCompletedAdapter.notifyItemInserted(0);
+                    mCompletedAdapter.notifyItemRangeChanged(0, mTaskListCompleted.size());
+
+
+                    mTaskListRemaining.remove(position);
+                    mRecyclerViewRemaining.removeViewAt(position);
+                    mRemainingAdapter.notifyItemRemoved(position);
+                    mRemainingAdapter.notifyItemRangeChanged(position, mTaskListRemaining.size());
                 }
                 //dataBaseHelper.updateTask(mTask);
             }
@@ -196,7 +205,7 @@ public class ViewCategory extends AppCompatActivity {
 
     private void buildRecyclerViewCompleted()
     {
-        mRecyclerViewCompleted.setHasFixedSize(true);
+        mRecyclerViewCompleted.setHasFixedSize(false);
         mLayoutManagerCompleted = new LinearLayoutManager(getApplicationContext());
 
         mRecyclerViewCompleted.setLayoutManager(mLayoutManagerCompleted);
@@ -233,16 +242,21 @@ public class ViewCategory extends AppCompatActivity {
         mCompletedAdapter.setOnItemCheckedChangeListener(new TaskListAdapter.OnItemCheckedChange() {
             @Override
             public void onItemChecked(int position, boolean isChecked) {
-                Toast.makeText(getApplicationContext(), "position = "+position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "position = "+position, Toast.LENGTH_SHORT).show();
                 Log.d("position = ", position+".");
                 Task mTask = mTaskListCompleted.get(position);
                 mTask.setTaskCompleted(isChecked);
-                if(!isChecked)
+                Toast.makeText(getApplicationContext(), mTask.getTaskTitle()+" is "+mTask.isTaskCompleted(), Toast.LENGTH_SHORT).show();
+                if(!mTask.isTaskCompleted())
                 {
                     mTaskListRemaining.add(0, mTask);
-                    mTaskListCompleted.remove(position);
                     mRemainingAdapter.notifyItemInserted(0);
+                    mRemainingAdapter.notifyItemRangeChanged(0, mTaskListRemaining.size());
+
+                    mTaskListCompleted.remove(position);
+                    mRecyclerViewCompleted.removeViewAt(position);
                     mCompletedAdapter.notifyItemRemoved(position);
+                    mCompletedAdapter.notifyItemRangeChanged(position, mTaskListCompleted.size());
                 }
                 //dataBaseHelper.updateTask(mTask);
             }

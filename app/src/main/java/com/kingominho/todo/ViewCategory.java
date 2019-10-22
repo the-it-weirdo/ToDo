@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -16,10 +17,10 @@ import java.util.ArrayList;
 
 public class ViewCategory extends AppCompatActivity {
 
-    private ArrayList<Task> mTaskListCompleted;
-    private ArrayList<Task> mTaskListRemaining;
+    protected ArrayList<Task> mTaskListCompleted = new ArrayList<>();
+    protected ArrayList<Task> mTaskListRemaining = new ArrayList<>();
     private RecyclerView mRecyclerViewRemaining, mRecyclerViewCompleted;
-    private TaskListAdapter mAdapter, mRemainingAdapter, mCompletedAdapter;
+    protected TaskListAdapter mAdapter, mRemainingAdapter, mCompletedAdapter;
     private RecyclerView.LayoutManager mLayoutManagerRemaining, mLayoutManagerCompleted;
 
     private DataBaseHelper dataBaseHelper;
@@ -38,9 +39,7 @@ public class ViewCategory extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
         mRecyclerViewRemaining = findViewById(R.id.taskRemainingRecycler);
-        //mRecyclerViewRemaining.setNestedScrollingEnabled(false);
         mRecyclerViewCompleted = findViewById(R.id.taskCompletedRecycler);
-        //mRecyclerViewCompleted.setNestedScrollingEnabled(false);
         categoryName = findViewById(R.id.categoryName);
         remainingTask = findViewById(R.id.taskRemainingCount);
         categoryIcon = findViewById(R.id.categoryIcon);
@@ -70,18 +69,27 @@ public class ViewCategory extends AppCompatActivity {
             categoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_f5a110_24dp));
         }
 
-        mTaskListCompleted = makeList(true);
+        //mTaskListCompleted = makeList(true);
         //mTaskListCompleted = new ArrayList<Task>();
-        mTaskListRemaining = makeList(false);
-        mRemainingAdapter = new TaskListAdapter(mTaskListRemaining, getApplicationContext());
-        mCompletedAdapter = new TaskListAdapter(mTaskListCompleted, getApplicationContext());
+        //mTaskListRemaining = makeList(false);
         //buildRecyclerView(mRecyclerViewRemaining, mRemainingAdapter, mTaskListRemaining);
         //buildRecyclerView(mRecyclerViewCompleted, mCompletedAdapter, mTaskListCompleted);
+        mRemainingAdapter = new TaskListAdapter(mTaskListRemaining, getApplicationContext());
+        mCompletedAdapter = new TaskListAdapter(mTaskListCompleted, getApplicationContext());
+
+        mLayoutManagerRemaining = new LinearLayoutManager(getApplicationContext());
+        mLayoutManagerCompleted = new LinearLayoutManager(getApplicationContext());
+
+        new LoadTaskAsyncTask(this, true, mCompletedAdapter).execute(true);
+        new LoadTaskAsyncTask(this, false, mRemainingAdapter).execute(false);
+
         buildRecyclerViewRemaining();
         buildRecyclerViewCompleted();
+        //builRecyclerView(mRecyclerViewRemaining, mTaskListRemaining, mRemainingAdapter, mLayoutManagerRemaining);
+        //builRecyclerView(mRecyclerViewCompleted, mTaskListCompleted, mCompletedAdapter, mLayoutManagerCompleted);
     }
 
-    private ArrayList<Task> makeList(boolean isCompleted) {
+    protected ArrayList<Task> makeList(boolean isCompleted) {
         ArrayList<Task> arrayList = new ArrayList<Task>();
         Cursor queryResult = dataBaseHelper.getTask(String.valueOf(user.getUserId()).trim(), category, isCompleted);
 
@@ -111,7 +119,7 @@ public class ViewCategory extends AppCompatActivity {
         return arrayList;
     }
 
-    private void buildRecyclerViewRemaining() {
+    protected void buildRecyclerViewRemaining() {
         mRecyclerViewRemaining.setHasFixedSize(false);
         mLayoutManagerRemaining = new LinearLayoutManager(getApplicationContext());
 
@@ -164,8 +172,15 @@ public class ViewCategory extends AppCompatActivity {
                     mRecyclerViewRemaining.removeViewAt(position);
                     mRemainingAdapter.notifyItemRemoved(position);
                     mRemainingAdapter.notifyItemRangeChanged(position, mTaskListRemaining.size());
+
+                    String str = mTaskListRemaining.size()+" tasks remaining";
+                    remainingTask.setText(str);
                 }
-                dataBaseHelper.updateTask(mTask);
+                boolean res = dataBaseHelper.updateTask(mTask);
+                if(!res)
+                {
+                    Toast.makeText(getApplicationContext(), "Task Update failed!!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -175,7 +190,15 @@ public class ViewCategory extends AppCompatActivity {
                 mRecyclerViewRemaining.removeViewAt(position);
                 mRemainingAdapter.notifyItemRemoved(position);
                 mRemainingAdapter.notifyItemRangeChanged(position, mTaskListRemaining.size());
-                dataBaseHelper.deleteTask(mTask.getTaskId());
+
+                String str = mTaskListRemaining.size()+" tasks remaining";
+                remainingTask.setText(str);
+
+                boolean res = dataBaseHelper.deleteTask(mTask.getTaskId());
+                if(!res)
+                {
+                    Toast.makeText(getApplicationContext(), "Task Delete failed!!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -202,7 +225,7 @@ public class ViewCategory extends AppCompatActivity {
         });
     }*/
 
-    private void buildRecyclerViewCompleted() {
+    protected void buildRecyclerViewCompleted() {
         mRecyclerViewCompleted.setHasFixedSize(false);
         mLayoutManagerCompleted = new LinearLayoutManager(getApplicationContext());
 
@@ -255,7 +278,15 @@ public class ViewCategory extends AppCompatActivity {
                     mCompletedAdapter.notifyItemRemoved(position);
                     mCompletedAdapter.notifyItemRangeChanged(position, mTaskListCompleted.size());
                 }
-                //dataBaseHelper.updateTask(mTask);
+
+                String str = mTaskListRemaining.size()+" tasks remaining";
+                remainingTask.setText(str);
+
+                boolean res = dataBaseHelper.updateTask(mTask);
+                if(!res)
+                {
+                    Toast.makeText(getApplicationContext(), "Task Update failed!!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -265,9 +296,18 @@ public class ViewCategory extends AppCompatActivity {
                 mRecyclerViewCompleted.removeViewAt(position);
                 mCompletedAdapter.notifyItemRemoved(position);
                 mCompletedAdapter.notifyItemRangeChanged(position, mTaskListCompleted.size());
-                dataBaseHelper.deleteTask(mTask.getTaskId());
+
+                String str = mTaskListRemaining.size()+" tasks remaining";
+                remainingTask.setText(str);
+
+                boolean res = dataBaseHelper.deleteTask(mTask.getTaskId());
+                if(!res)
+                {
+                    Toast.makeText(getApplicationContext(), "Task Delete failed!!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
     }
+
 }

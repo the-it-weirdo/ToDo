@@ -82,6 +82,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
     @Override
     public void onBindViewHolder(@NonNull TaskListViewHolder holder, final int position) {
+
+        //new LoadTaskAsyncTask((ViewCategory)context, true).execute(true);
+        //new LoadTaskAsyncTask((ViewCategory)context, false).execute(false);
+
         Task currentItem = mTaskList.get(position);
 
         boolean isCompleted = currentItem.isTaskCompleted();
@@ -119,8 +123,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
     @Override
     public int getItemCount() {
+        if(mTaskList == null)
+        {
+            return 0;
+        }
         return mTaskList.size();
     }
 
-
+    public void setmTaskList(ArrayList<Task> mTaskList)
+    {
+        this.mTaskList = mTaskList;
+        notifyDataSetChanged();
+    }
 }

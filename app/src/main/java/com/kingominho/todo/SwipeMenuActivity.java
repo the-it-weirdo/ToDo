@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.RelativeLayout;
@@ -197,5 +198,6 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
 
         Toast.makeText(getApplicationContext(), param+" clicked!", Toast.LENGTH_SHORT).show();
     }
+
 
 }

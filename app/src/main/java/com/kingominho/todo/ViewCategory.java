@@ -46,17 +46,14 @@ public class ViewCategory extends AppCompatActivity {
         categoryIcon = findViewById(R.id.categoryIcon);
 
         mBundle = getIntent().getExtras();
-        if(mBundle!=null)
-        {
+        if (mBundle != null) {
             Integer userId = mBundle.getInt(User.USERID_KEY);
             String userName = mBundle.getString(User.USER_NAME_KEY);
             String userEmail = mBundle.getString(User.USER_EMAIL_KEY);
             user = new User(userId, userEmail, userName);
             category = mBundle.getString(SwipeMenuActivity.ITEM_KEY);
             taskRemaining = mBundle.getString(SwipeMenuActivity.TASK_REMAINING_KEY);
-        }
-        else
-        {
+        } else {
             user = new User(0, "Test", "Test");
             category = "Test";
             mBundle = user.toBundle();
@@ -64,15 +61,12 @@ public class ViewCategory extends AppCompatActivity {
         }
 
         categoryName.setText(category);
-        String str = taskRemaining+ " tasks remaining.";
+        String str = taskRemaining + " tasks remaining.";
         remainingTask.setText(str);
 
-        if(category.equals("Work"))
-        {
+        if (category.equals("Work")) {
             categoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_work_32b1c4_24dp));
-        }
-        else if(category.equals("Home"))
-        {
+        } else if (category.equals("Home")) {
             categoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_f5a110_24dp));
         }
 
@@ -87,13 +81,11 @@ public class ViewCategory extends AppCompatActivity {
         buildRecyclerViewCompleted();
     }
 
-    private ArrayList<Task> makeList(boolean isCompleted)
-    {
+    private ArrayList<Task> makeList(boolean isCompleted) {
         ArrayList<Task> arrayList = new ArrayList<Task>();
         Cursor queryResult = dataBaseHelper.getTask(String.valueOf(user.getUserId()).trim(), category, isCompleted);
 
-        while(queryResult.moveToNext())
-        {
+        while (queryResult.moveToNext()) {
             /* Reference for column index:
 
                 public static final String taskDbIdColumn = "Id";
@@ -110,18 +102,16 @@ public class ViewCategory extends AppCompatActivity {
             arrayList.add(new Task(Integer.valueOf(taskId), taskTitle, isCompleted, String.valueOf(user.getUserId()), category));
         }
         //Task(String tTITLE, boolean isCompleted, String uID, String category)
-        if(arrayList.isEmpty())
-        {
-            arrayList.add(new Task("Test "+isCompleted, isCompleted, String.valueOf(user.getUserId()), category));
-            arrayList.add(new Task("Test2 "+isCompleted, isCompleted, String.valueOf(user.getUserId()), category));
-            arrayList.add(new Task("Test3 "+isCompleted, isCompleted, String.valueOf(user.getUserId()), category));
+        if (arrayList.isEmpty()) {
+            arrayList.add(new Task("Test " + isCompleted, isCompleted, String.valueOf(user.getUserId()), category));
+            arrayList.add(new Task("Test2 " + isCompleted, isCompleted, String.valueOf(user.getUserId()), category));
+            arrayList.add(new Task("Test3 " + isCompleted, isCompleted, String.valueOf(user.getUserId()), category));
         }
 
         return arrayList;
     }
 
-    private void buildRecyclerViewRemaining()
-    {
+    private void buildRecyclerViewRemaining() {
         mRecyclerViewRemaining.setHasFixedSize(false);
         mLayoutManagerRemaining = new LinearLayoutManager(getApplicationContext());
 
@@ -160,12 +150,11 @@ public class ViewCategory extends AppCompatActivity {
             @Override
             public void onItemChecked(int position, boolean isChecked) {
                 //Toast.makeText(getApplicationContext(), "position = "+position, Toast.LENGTH_SHORT).show();
-                Log.d("position = ", position+".");
+                Log.d("position = ", position + ".");
                 Task mTask = mTaskListRemaining.get(position);
                 mTask.setTaskCompleted(isChecked);
-                Toast.makeText(getApplicationContext(), mTask.getTaskTitle()+" is "+mTask.isTaskCompleted(), Toast.LENGTH_SHORT).show();
-                if(mTask.isTaskCompleted())
-                {
+                Toast.makeText(getApplicationContext(), mTask.getTaskTitle() + " is " + mTask.isTaskCompleted(), Toast.LENGTH_SHORT).show();
+                if (mTask.isTaskCompleted()) {
                     mTaskListCompleted.add(0, mTask);
                     mCompletedAdapter.notifyItemInserted(0);
                     mCompletedAdapter.notifyItemRangeChanged(0, mTaskListCompleted.size());
@@ -176,7 +165,17 @@ public class ViewCategory extends AppCompatActivity {
                     mRemainingAdapter.notifyItemRemoved(position);
                     mRemainingAdapter.notifyItemRangeChanged(position, mTaskListRemaining.size());
                 }
-                //dataBaseHelper.updateTask(mTask);
+                dataBaseHelper.updateTask(mTask);
+            }
+
+            @Override
+            public void onDeleteButtonPressed(int position) {
+                Task mTask = mTaskListRemaining.get(position);
+                mTaskListRemaining.remove(position);
+                mRecyclerViewRemaining.removeViewAt(position);
+                mRemainingAdapter.notifyItemRemoved(position);
+                mRemainingAdapter.notifyItemRangeChanged(position, mTaskListRemaining.size());
+                dataBaseHelper.deleteTask(mTask.getTaskId());
             }
         });
 
@@ -203,8 +202,7 @@ public class ViewCategory extends AppCompatActivity {
         });
     }*/
 
-    private void buildRecyclerViewCompleted()
-    {
+    private void buildRecyclerViewCompleted() {
         mRecyclerViewCompleted.setHasFixedSize(false);
         mLayoutManagerCompleted = new LinearLayoutManager(getApplicationContext());
 
@@ -243,12 +241,11 @@ public class ViewCategory extends AppCompatActivity {
             @Override
             public void onItemChecked(int position, boolean isChecked) {
                 //Toast.makeText(getApplicationContext(), "position = "+position, Toast.LENGTH_SHORT).show();
-                Log.d("position = ", position+".");
+                Log.d("position = ", position + ".");
                 Task mTask = mTaskListCompleted.get(position);
                 mTask.setTaskCompleted(isChecked);
-                Toast.makeText(getApplicationContext(), mTask.getTaskTitle()+" is "+mTask.isTaskCompleted(), Toast.LENGTH_SHORT).show();
-                if(!mTask.isTaskCompleted())
-                {
+                Toast.makeText(getApplicationContext(), mTask.getTaskTitle() + " is " + mTask.isTaskCompleted(), Toast.LENGTH_SHORT).show();
+                if (!mTask.isTaskCompleted()) {
                     mTaskListRemaining.add(0, mTask);
                     mRemainingAdapter.notifyItemInserted(0);
                     mRemainingAdapter.notifyItemRangeChanged(0, mTaskListRemaining.size());
@@ -259,6 +256,16 @@ public class ViewCategory extends AppCompatActivity {
                     mCompletedAdapter.notifyItemRangeChanged(position, mTaskListCompleted.size());
                 }
                 //dataBaseHelper.updateTask(mTask);
+            }
+
+            @Override
+            public void onDeleteButtonPressed(int position) {
+                Task mTask = mTaskListCompleted.get(position);
+                mTaskListCompleted.remove(position);
+                mRecyclerViewCompleted.removeViewAt(position);
+                mCompletedAdapter.notifyItemRemoved(position);
+                mCompletedAdapter.notifyItemRangeChanged(position, mTaskListCompleted.size());
+                dataBaseHelper.deleteTask(mTask.getTaskId());
             }
         });
 

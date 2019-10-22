@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     public interface OnItemCheckedChange
     {
         void onItemChecked(int position, boolean isChecked);
+        void onDeleteButtonPressed(int position);
     }
 
 
@@ -38,12 +40,14 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
         public TextView taskTitle;
         public CheckBox taskCompletedCheckBox;
+        public ImageButton deleteButton;
 
         public TaskListViewHolder(View itemView)//, final OnItemClickListener listener)
         {
             super(itemView);
             taskTitle = itemView.findViewById(R.id.taskTitle);
             taskCompletedCheckBox = itemView.findViewById(R.id.taskCompletedCheckBox);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
 
             /*taskCompletedCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,6 +100,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 mListener.onItemChecked(position, isChecked);
+            }
+        });
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onDeleteButtonPressed(position);
             }
         });
         /*holder.taskCompletedCheckBox.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package com.kingominho.todo;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -28,6 +29,7 @@ public class LoadTaskAsyncTask extends AsyncTask<Boolean, Integer, ArrayList<Tas
             return;
         }
         Toast.makeText(viewCategory.getApplicationContext(), "Loading...", Toast.LENGTH_LONG).show();
+        mAdapter.setmTaskList(null);
     }
 
     @Override
@@ -52,13 +54,12 @@ public class LoadTaskAsyncTask extends AsyncTask<Boolean, Integer, ArrayList<Tas
     @Override
     protected void onPostExecute(ArrayList<Task> tasks) {
 
-        ViewCategory viewCategory = viewCategoryWeakReference.get();
+        final ViewCategory viewCategory = viewCategoryWeakReference.get();
 
         if(viewCategory == null || viewCategory.isFinishing())
         {
             return;
         }
-        Toast.makeText(viewCategory.getApplicationContext(), "Load Complete", Toast.LENGTH_LONG).show();
         if(bool)
         {
             viewCategory.mTaskListCompleted = tasks;
@@ -70,6 +71,15 @@ public class LoadTaskAsyncTask extends AsyncTask<Boolean, Integer, ArrayList<Tas
             //Toast.makeText(viewCategory.getApplicationContext(), viewCategory.mTaskListRemaining.get(0).getTaskTitle(), Toast.LENGTH_LONG).show();
         }
 
-        mAdapter.setmTaskList(tasks);
+        final ArrayList<Task> tsk = tasks;
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(viewCategory.getApplicationContext(), "Load Complete", Toast.LENGTH_LONG).show();
+                mAdapter.setmTaskList(tsk);
+            }
+        }, 2000);
+
     }
 }

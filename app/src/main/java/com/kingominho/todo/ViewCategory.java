@@ -154,6 +154,8 @@ public class ViewCategory extends AppCompatActivity {
             }
         });*/
 
+
+
         mRemainingAdapter.setOnItemCheckedChangeListener(new TaskListAdapter.OnItemCheckedChange() {
             @Override
             public void onItemChecked(int position, boolean isChecked) {

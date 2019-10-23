@@ -9,45 +9,50 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.util.ArrayList;
 
-public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>{
+public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder> {
 
 
     private ArrayList<Task> mTaskList;
     private Context context;
     private OnItemCheckedChange mListener;
 
-    public interface OnItemCheckedChange
-    {
+    public interface OnItemCheckedChange {
         void onItemChecked(int position, boolean isChecked);
+
         void onDeleteButtonPressed(int position);
     }
 
 
-
-    public void setOnItemCheckedChangeListener(OnItemCheckedChange listener)
-    {
+    public void setOnItemCheckedChangeListener(OnItemCheckedChange listener) {
         mListener = listener;
     }
 
-    public class TaskListViewHolder extends RecyclerView.ViewHolder{
+    public class TaskListViewHolder extends RecyclerView.ViewHolder {
 
         public TextView taskTitle;
         public CheckBox taskCompletedCheckBox;
         public ImageButton deleteButton;
+        public ShimmerFrameLayout shimmerFrameLayout;
+        public RelativeLayout relativeLayout;
 
         public TaskListViewHolder(View itemView)//, final OnItemClickListener listener)
         {
             super(itemView);
+            relativeLayout = itemView.findViewById(R.id.non_shimmer);
             taskTitle = itemView.findViewById(R.id.taskTitle);
             taskCompletedCheckBox = itemView.findViewById(R.id.taskCompletedCheckBox);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            shimmerFrameLayout = itemView.findViewById(R.id.shimmer_container);
 
             /*taskCompletedCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,52 +91,57 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         //new LoadTaskAsyncTask((ViewCategory)context, true).execute(true);
         //new LoadTaskAsyncTask((ViewCategory)context, false).execute(false);
 
-        Task currentItem = mTaskList.get(position);
+        if (mTaskList != null) {
+            holder.relativeLayout.setVisibility(View.VISIBLE);
+            holder.shimmerFrameLayout.setVisibility(View.GONE);
+            Task currentItem = mTaskList.get(position);
 
-        boolean isCompleted = currentItem.isTaskCompleted();
-        holder.taskTitle.setText(currentItem.getTaskTitle());
-        holder.taskTitle.setActivated(!isCompleted);
-        if(isCompleted)
-        {
-            holder.taskTitle.setPaintFlags(holder.taskTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-        else
-        {
-            holder.taskTitle.setPaintFlags(holder.taskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
-        holder.taskCompletedCheckBox.setChecked(isCompleted);
-        holder.taskCompletedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                mListener.onItemChecked(position, isChecked);
+            boolean isCompleted = currentItem.isTaskCompleted();
+            holder.taskTitle.setText(currentItem.getTaskTitle());
+            holder.taskTitle.setActivated(!isCompleted);
+            if (isCompleted) {
+                holder.taskTitle.setPaintFlags(holder.taskTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                holder.taskTitle.setPaintFlags(holder.taskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
-        });
+            holder.taskCompletedCheckBox.setChecked(isCompleted);
+            holder.taskCompletedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    mListener.onItemChecked(position, isChecked);
+                }
+            });
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDeleteButtonPressed(position);
-            }
-        });
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onDeleteButtonPressed(position);
+                }
+            });
         /*holder.taskCompletedCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onItemChecked(position);
             }
         });*/
+        }
+        else
+        {
+            holder.shimmerFrameLayout.setVisibility(View.VISIBLE);
+            holder.relativeLayout.setVisibility(View.GONE);
+            holder.shimmerFrameLayout.startShimmer();
+        }
     }
 
     @Override
     public int getItemCount() {
-        if(mTaskList == null)
-        {
-            return 0;
+        if (mTaskList == null) {
+            return 10;
         }
         return mTaskList.size();
     }
 
-    public void setmTaskList(ArrayList<Task> mTaskList)
-    {
+    public void setmTaskList(ArrayList<Task> mTaskList) {
         this.mTaskList = mTaskList;
         notifyDataSetChanged();
     }

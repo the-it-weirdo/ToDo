@@ -1,12 +1,17 @@
 package com.kingominho.todo;
 
 import android.animation.ArgbEvaluator;
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Pair;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,10 +19,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 public class SwipeMenuActivity extends AppCompatActivity implements Adapter.AdapterOnCardClickListener{
     ViewPager viewPager;
@@ -26,6 +34,8 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
     List<CategoryModel> models;
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+
+    public ActivityOptions activityOptions;
 
     public static final String ITEM_KEY = "CATEGORY_ITEM";
     public static final String TASK_REMAINING_KEY = "TASK_REMAINING";
@@ -193,11 +203,20 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
         mBundle.putString(ITEM_KEY, param);
         mBundle.putString(TASK_REMAINING_KEY, String.valueOf(map.get(param)));
         intent.putExtras(mBundle);
-        startActivity(intent);
+
+        if(Build.VERSION.SDK_INT>=21)
+        {
+            //@TargetApi(LOLLIPOP)
+            activityOptions = ActivityOptions.makeSceneTransitionAnimation(SwipeMenuActivity.this, adapter.getPairs());
+            startActivity(intent, activityOptions.toBundle());
+        }
+        else
+        {
+            startActivity(intent);
+        }
         //overridePendingTransition(R.anim.go_up, R.anim.go_down);
 
-        Toast.makeText(getApplicationContext(), param+" clicked!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), param+" clicked!", Toast.LENGTH_SHORT).show();
     }
-
 
 }

@@ -23,6 +23,7 @@ android:layout_margin="10dp">
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="8dp"
+        android:transitionName="categoryIcon"
         />
 
     <TextView
@@ -34,7 +35,8 @@ android:layout_margin="10dp">
         android:textStyle="bold|italic"
         android:layout_below="@id/categoryIcon"
         android:layout_toRightOf="@id/categoryIcon"
-        android:layout_toEndOf="@id/categoryIcon"/>
+        android:layout_toEndOf="@id/categoryIcon"
+        android:transitionName="categoryName"/>
 
     <TextView
         android:id="@+id/taskRemainingCount"
@@ -44,7 +46,8 @@ android:layout_margin="10dp">
         android:textSize="15sp"
         android:layout_below="@id/categoryName"
         android:layout_alignStart="@id/categoryName"
-        android:layout_alignLeft="@id/categoryName"/>
+        android:layout_alignLeft="@id/categoryName"
+        android:transitionName="tasksRemaining"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

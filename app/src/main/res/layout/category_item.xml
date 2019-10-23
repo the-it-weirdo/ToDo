@@ -9,6 +9,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView"
+        android:transitionName="parentCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -33,7 +34,8 @@
                 android:src="@drawable/ic_person_f5a110_24dp"
                 android:layout_margin="8dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignParentTop="true"
+                android:transitionName="categoryIcon"/>
 
             <TextView
                 android:id="@+id/categoryTitle"
@@ -45,7 +47,8 @@
                 android:textSize="30sp"
                 android:textStyle="bold|italic"
                 android:textAlignment="viewEnd"
-                android:gravity="end"/>
+                android:gravity="end"
+                android:transitionName="categoryName"/>
 
             <TextView
                 android:id="@+id/categoryTaskRemaining"
@@ -60,7 +63,8 @@
                 android:layout_marginEnd="30dp"
                 android:textSize="15sp"
                 android:textAlignment="viewEnd"
-                android:gravity="end" />
+                android:gravity="end"
+                android:transitionName="tasksRemaining"/>
         </RelativeLayout>
 
     </com.google.android.material.card.MaterialCardView>

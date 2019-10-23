@@ -136,7 +136,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     @Override
     public int getItemCount() {
         if (mTaskList == null) {
-            return 10;
+            return 2;
         }
         return mTaskList.size();
     }

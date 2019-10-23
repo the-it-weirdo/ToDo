@@ -1,6 +1,7 @@
 package com.kingominho.todo;
 
 import android.content.Context;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ public class Adapter extends PagerAdapter {
     private ImageView categoryIcon;
     private TextView categoryTitle, categoryTaskRemaining;
     private CardView cardView;
+
+    public Pair[] pairs;
 
     public Adapter(List<CategoryModel> models, Context context) {
         this.models = models;
@@ -92,4 +95,18 @@ public class Adapter extends PagerAdapter {
     {
         void onCardClick(String param);
     }
+
+    public Pair[] getPairs()
+    {
+        /*pairs = new Pair[3];
+        pairs[0] = new Pair<View, String>(categoryIcon, "categoryIcon");
+        pairs[1] = new Pair<View, String>(categoryTitle, "categoryName");
+        pairs[2] = new Pair<View, String>(categoryTaskRemaining, "tasksRemaining");*/
+
+        pairs = new Pair[1];
+        pairs[0] = new Pair<View, String>(cardView, "parentCard");
+
+        return pairs;
+    }
 }
+

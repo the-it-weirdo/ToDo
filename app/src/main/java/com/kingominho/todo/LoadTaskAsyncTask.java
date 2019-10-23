@@ -28,7 +28,7 @@ public class LoadTaskAsyncTask extends AsyncTask<Boolean, Integer, ArrayList<Tas
         {
             return;
         }
-        Toast.makeText(viewCategory.getApplicationContext(), "Loading...", Toast.LENGTH_LONG).show();
+        //Toast.makeText(viewCategory.getApplicationContext(), "Loading...", Toast.LENGTH_LONG).show();
         mAdapter.setmTaskList(null);
     }
 
@@ -76,7 +76,7 @@ public class LoadTaskAsyncTask extends AsyncTask<Boolean, Integer, ArrayList<Tas
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(viewCategory.getApplicationContext(), "Load Complete", Toast.LENGTH_LONG).show();
+                //Toast.makeText(viewCategory.getApplicationContext(), "Load Complete", Toast.LENGTH_LONG).show();
                 mAdapter.setmTaskList(tsk);
             }
         }, 2000);

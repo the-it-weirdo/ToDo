@@ -9,137 +9,121 @@
     android:padding="10dp"
     tools:context=".ViewCategory">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/parentCard"
-        android:elevation="0dp"
-        android:background="@android:color/transparent"
-        android:transitionName="parentCard"
+    <RelativeLayout
+        android:id="@+id/parent_rl_view_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ImageView
+            android:id="@+id/categoryIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_work_32b1c4_24dp" />
+
+        <TextView
+            android:id="@+id/categoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categoryIcon"
+            android:layout_toEndOf="@id/categoryIcon"
+            android:layout_toRightOf="@id/categoryIcon"
+            android:text="Work"
+            android:textSize="30sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/taskRemainingCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categoryName"
+            android:layout_alignStart="@id/categoryName"
+            android:layout_alignLeft="@id/categoryName"
+            android:text="50 tasks remaining"
+            android:textSize="15sp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.20"
+            app:layout_constraintTop_toBottomOf="@id/taskRemainingCount" />
+
+        <TextView
+            android:id="@+id/remainingTaskHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/taskRemainingCount"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:text="Tasks Remaining"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/rl1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/remainingTaskHeader">
 
-            <ImageView
-                android:id="@+id/categoryIcon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="8dp"
-                android:src="@drawable/ic_work_32b1c4_24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/categoryName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Work"
-                android:textSize="30sp"
-                android:textStyle="bold|italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toEndOf="@id/categoryIcon"
-                app:layout_constraintTop_toBottomOf="@id/categoryIcon" />
-
-            <TextView
-                android:id="@+id/taskRemainingCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="50 tasks remaining"
-                android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="@id/categoryName"
-                app:layout_constraintTop_toBottomOf="@id/categoryName" />
-
-            <TextView
-                android:id="@+id/remainingTaskHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Tasks Remaining"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/taskRemainingCount" />
-
-            <RelativeLayout
-                android:id="@+id/rl1"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/taskRemainingRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/remainingTaskHeader"
-                android:layout_margin="5dp"
-                app:layout_constraintEnd_toStartOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/remainingTaskHeader">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/taskRemainingRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="3dp"
-                    android:padding="5dp" />
-            </RelativeLayout>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="3dp"
+                android:padding="5dp" />
+        </RelativeLayout>
 
 
-            <TextView
-                android:id="@+id/completedTaskHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Tasks Completed"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rl1" />
+        <TextView
+            android:id="@+id/completedTaskHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl1"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:text="Tasks Completed"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <RelativeLayout
-                android:id="@+id/rl2"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/completedTaskHeader"
+            android:layout_alignParentBottom="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/taskCompletedRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/completedTaskHeader">
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="3dp"
+                android:padding="5dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/taskCompletedRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="3dp"
-                    android:padding="5dp" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addTaskFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|end"
+            android:backgroundTint="@color/color5"
+            android:src="@drawable/ic_add_white_24dp" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addTaskFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:backgroundTint="@color/color5"
-                android:src="@drawable/ic_add_white_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+    </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>

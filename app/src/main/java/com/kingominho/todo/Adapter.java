@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.view.ViewCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
@@ -25,8 +27,8 @@ public class Adapter extends PagerAdapter {
     private ImageView categoryIcon;
     private TextView categoryTitle, categoryTaskRemaining;
     private CardView cardView;
+    private RelativeLayout layout;
 
-    public Pair[] pairs;
 
     public Adapter(List<CategoryModel> models, Context context) {
         this.models = models;
@@ -55,7 +57,7 @@ public class Adapter extends PagerAdapter {
         layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.category_item, container, false);
 
-
+        layout = view.findViewById(R.id.parent_rl);
         cardView = view.findViewById(R.id.cardView);
         categoryIcon = view.findViewById(R.id.categoryIcon);
         categoryTitle = view.findViewById(R.id.categoryTitle);
@@ -66,13 +68,15 @@ public class Adapter extends PagerAdapter {
         categoryTitle.setText(models.get(position).getCategoryTitle());
         categoryTaskRemaining.setText(models.get(position).getTaskRemaining());
 
+        ViewCompat.setTransitionName(layout, categoryTitle.getText().toString());
+
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mAdapterOnCardClickListener!=null)
                 {
-                    mAdapterOnCardClickListener.onCardClick(models.get(position).getCategoryTitle());
+                    mAdapterOnCardClickListener.onCardClick(models.get(position).getCategoryTitle(), layout);
                 }
                 /*Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra("param", models.get(position).getTitle());
@@ -93,20 +97,7 @@ public class Adapter extends PagerAdapter {
 
     public interface AdapterOnCardClickListener
     {
-        void onCardClick(String param);
-    }
-
-    public Pair[] getPairs()
-    {
-        /*pairs = new Pair[3];
-        pairs[0] = new Pair<View, String>(categoryIcon, "categoryIcon");
-        pairs[1] = new Pair<View, String>(categoryTitle, "categoryName");
-        pairs[2] = new Pair<View, String>(categoryTaskRemaining, "tasksRemaining");*/
-
-        pairs = new Pair[1];
-        pairs[0] = new Pair<View, String>(cardView, "parentCard");
-
-        return pairs;
+        void onCardClick(String param, RelativeLayout view);
     }
 }
 

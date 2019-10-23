@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.ViewCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import java.lang.annotation.Target;
@@ -123,6 +125,7 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
                     String.valueOf(map.get(categoryNames[i]))+appendString));
         }
 
+
         adapter = new Adapter(models, this);
 
         viewPager = findViewById(R.id.viewPager);
@@ -198,22 +201,31 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
     }
 
     @Override
-    public void onCardClick(String param) {
+    public void onCardClick(String param, RelativeLayout view) {
         Intent intent = new Intent(getApplicationContext(), ViewCategory.class);
         mBundle.putString(ITEM_KEY, param);
         mBundle.putString(TASK_REMAINING_KEY, String.valueOf(map.get(param)));
         intent.putExtras(mBundle);
 
-        if(Build.VERSION.SDK_INT>=21)
+        /*Pair[] pairs = new Pair[1];
+        pairs[0] = new Pair<View, String>(view, "parentCard");*/
+
+        /*if(Build.VERSION.SDK_INT>=21)
         {
             //@TargetApi(LOLLIPOP)
-            activityOptions = ActivityOptions.makeSceneTransitionAnimation(SwipeMenuActivity.this, adapter.getPairs());
+            activityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                    SwipeMenuActivity.this,
+                    view,
+                    ViewCompat.getTransitionName(view));
             startActivity(intent, activityOptions.toBundle());
         }
         else
         {
             startActivity(intent);
-        }
+        }*/
+
+        startActivity(intent);
+        finish();
         //overridePendingTransition(R.anim.go_up, R.anim.go_down);
 
         //Toast.makeText(getApplicationContext(), param+" clicked!", Toast.LENGTH_SHORT).show();

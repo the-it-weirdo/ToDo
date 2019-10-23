@@ -1,17 +1,28 @@
 package com.kingominho.todo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -20,7 +31,7 @@ public class ViewCategory extends AppCompatActivity {
     protected ArrayList<Task> mTaskListCompleted = new ArrayList<>();
     protected ArrayList<Task> mTaskListRemaining = new ArrayList<>();
     private RecyclerView mRecyclerViewRemaining, mRecyclerViewCompleted;
-    protected TaskListAdapter mAdapter, mRemainingAdapter, mCompletedAdapter;
+    protected TaskListAdapter mRemainingAdapter, mCompletedAdapter;
     private RecyclerView.LayoutManager mLayoutManagerRemaining, mLayoutManagerCompleted;
 
     private DataBaseHelper dataBaseHelper;
@@ -31,18 +42,25 @@ public class ViewCategory extends AppCompatActivity {
 
     private TextView categoryName, remainingTask;
     private ImageView categoryIcon;
+    private RelativeLayout relativeLayout;
+    private FloatingActionButton fab;
+
+    ActivityOptions activityOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_category);
+        supportPostponeEnterTransition();
 
+        relativeLayout = findViewById(R.id.parent_rl_view_category);
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
         mRecyclerViewRemaining = findViewById(R.id.taskRemainingRecycler);
         mRecyclerViewCompleted = findViewById(R.id.taskCompletedRecycler);
         categoryName = findViewById(R.id.categoryName);
         remainingTask = findViewById(R.id.taskRemainingCount);
         categoryIcon = findViewById(R.id.categoryIcon);
+        fab = findViewById(R.id.addTaskFab);
 
         mBundle = getIntent().getExtras();
         if (mBundle != null) {
@@ -58,8 +76,13 @@ public class ViewCategory extends AppCompatActivity {
             mBundle = user.toBundle();
             mBundle.putString(SwipeMenuActivity.ITEM_KEY, category);
         }
-
         categoryName.setText(category);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            relativeLayout.setTransitionName(categoryName.getText().toString());
+        }
+
+        supportStartPostponedEnterTransition();
+
         String str = taskRemaining + " tasks remaining.";
         remainingTask.setText(str);
 
@@ -69,6 +92,15 @@ public class ViewCategory extends AppCompatActivity {
             categoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_f5a110_24dp));
         }
 
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            int color = 0;
+            if (category.equals("Work")) {
+                color = getResources().getColor(R.color.color5);
+            } else if (category.equals("Home")) {
+                color = getResources().getColor(R.color.color1);
+            }
+            fab.setBackgroundTintList(new ColorStateList(new int[][]{new int[]{0}}, new int[]{color}));
+        }
         //mTaskListCompleted = makeList(true);
         //mTaskListCompleted = new ArrayList<Task>();
         //mTaskListRemaining = makeList(false);
@@ -85,8 +117,37 @@ public class ViewCategory extends AppCompatActivity {
 
         buildRecyclerViewRemaining();
         buildRecyclerViewCompleted();
-        //builRecyclerView(mRecyclerViewRemaining, mTaskListRemaining, mRemainingAdapter, mLayoutManagerRemaining);
-        //builRecyclerView(mRecyclerViewCompleted, mTaskListCompleted, mCompletedAdapter, mLayoutManagerCompleted);
+        //buildRecyclerView(mRecyclerViewRemaining, mTaskListRemaining, mRemainingAdapter, mLayoutManagerRemaining);
+        //buildRecyclerView(mRecyclerViewCompleted, mTaskListCompleted, mCompletedAdapter, mLayoutManagerCompleted);
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            fab.setTransitionName(categoryName.getText().toString());
+        }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTaskActivity();
+            }
+        });
+    }
+
+    private void addTaskActivity()
+    {
+        Intent intent = new Intent(getApplicationContext(), AddTaskActivity.class);
+        intent.putExtras(mBundle);
+        if(Build.VERSION.SDK_INT>=21)
+        {
+            //@TargetApi(LOLLIPOP)
+            activityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                    this,
+                    fab,
+                    ViewCompat.getTransitionName(fab));
+            startActivity(intent, activityOptions.toBundle());
+        }
+        else
+        {
+            startActivity(intent);
+        }
     }
 
     protected ArrayList<Task> makeList(boolean isCompleted) {
@@ -103,8 +164,8 @@ public class ViewCategory extends AppCompatActivity {
                 public static final String taskUserIdColumn = "UserId";
                 public static final String taskCategoryColumn = "TaskCategory";
              */
-            String taskId = queryResult.getString(2);
-            String taskTitle = queryResult.getString(3);
+            String taskId = queryResult.getString(1);
+            String taskTitle = queryResult.getString(2);
 
             //Task(Integer taskId, String tTITLE, boolean isCompleted, String uID, String category)
             arrayList.add(new Task(Integer.valueOf(taskId), taskTitle, isCompleted, String.valueOf(user.getUserId()), category));
@@ -117,6 +178,15 @@ public class ViewCategory extends AppCompatActivity {
         }
 
         return arrayList;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(getApplicationContext(), SwipeMenuActivity.class);
+        i.putExtras(user.toBundle());
+        startActivity(i);
+        finish();
     }
 
     protected void buildRecyclerViewRemaining() {

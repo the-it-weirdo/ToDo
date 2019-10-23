@@ -21,4 +21,11 @@
         <item>Home</item>
         <item>Work</item>
     </string-array>
+
+    <!--AddTaskActivity-->
+    <string name="addATask">Add a task</string>
+    <string name="enterTaskHint">What do you wanna do ?</string>
+    <string name="addingTask">Task will be added to </string>
+    <string name="category">Category</string>
+    <string name="forUser"> for User: </string>
 </resources>

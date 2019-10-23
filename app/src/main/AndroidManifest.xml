@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewCategory"></activity>
+        <activity android:name=".AddTaskActivity"></activity>
+        <activity android:name=".ViewCategory" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SwipeMenuActivity" />

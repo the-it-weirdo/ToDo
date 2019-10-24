@@ -14,6 +14,9 @@ public class LoginActivity extends AppCompatActivity {
 
     Button loginButton, signUpButton;
     EditText uName, uPass;
+
+    private DataBaseHelper dataBaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         String mUserName = uName.getText().toString().trim();
         String mUserPass = uPass.getText().toString().trim();
 
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
+        dataBaseHelper = new DataBaseHelper(getApplicationContext());
 
         Cursor queryResult = dataBaseHelper.getUser(mUserName, mUserPass);
 
@@ -77,5 +80,13 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(dataBaseHelper != null) {
+            dataBaseHelper.close();
+        }
+        super.onDestroy();
     }
 }

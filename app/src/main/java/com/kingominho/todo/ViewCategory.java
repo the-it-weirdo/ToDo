@@ -192,6 +192,14 @@ public class ViewCategory extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onDestroy() {
+        if(dataBaseHelper != null) {
+            dataBaseHelper.close();
+        }
+        super.onDestroy();
+    }
+
     protected void buildRecyclerViewRemaining() {
         mRecyclerViewRemaining.setHasFixedSize(false);
         mLayoutManagerRemaining = new LinearLayoutManager(getApplicationContext());

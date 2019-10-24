@@ -2,7 +2,9 @@ package com.kingominho.todo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.ViewCompat;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,7 +50,7 @@ public class AddTaskActivity extends AppCompatActivity {
             String userEmail = mBundle.getString(User.USER_EMAIL_KEY);
             user = new User(userId, userEmail, userName);
             category = mBundle.getString(SwipeMenuActivity.ITEM_KEY);
-            /*TODO: fix taskRemaining pass in Bundle. update task remaining on button click.
+            /*
             * TODO: fix onBackPresses for various activities ,
             * TODO: fix screenshot issues */
         } else {
@@ -88,6 +90,8 @@ public class AddTaskActivity extends AppCompatActivity {
 
         Task mTask = new Task(newTask, false, String.valueOf(user.getUserId()), category);
         dataBaseHelper.insertTask(mTask);
+        //super.onBackPressed();
+        //finish();
 
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -96,11 +100,23 @@ public class AddTaskActivity extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), ViewCategory.class);
                 mBundle.putInt(SwipeMenuActivity.TASK_REMAINING_KEY, mBundle.getInt(SwipeMenuActivity.TASK_REMAINING_KEY)+1);
                 i.putExtras(mBundle);
-                startActivity(i);
+                if(Build.VERSION.SDK_INT>=21)
+                {
+                    //@TargetApi(LOLLIPOP)
+                    ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                            AddTaskActivity.this,
+                            addTaskButton,
+                            ViewCompat.getTransitionName(addTaskButton));
+                    startActivity(i, activityOptions.toBundle());
+                }
+                else
+                {
+                    startActivity(i);
+                }
                 container.stopShimmer();
                 finish();
             }
-        }, 1500);
+        }, 500);
     }
 
     @Override
@@ -110,5 +126,13 @@ public class AddTaskActivity extends AppCompatActivity {
         startActivity(i);
         container.stopShimmer();
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(dataBaseHelper != null) {
+            dataBaseHelper.close();
+        }
+        super.onDestroy();
     }
 }

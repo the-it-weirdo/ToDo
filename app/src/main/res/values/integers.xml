@@ -6,4 +6,9 @@
         <item>@drawable/ic_work_32b1c4_24dp</item>
     </integer-array>
 
+    <integer-array name="drawable_gradients">
+        <item>@drawable/gradient_orange</item>
+        <item>@drawable/gradient_blue</item>
+    </integer-array>
+
 </resources>

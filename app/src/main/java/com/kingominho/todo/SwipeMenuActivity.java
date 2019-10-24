@@ -6,6 +6,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.ViewCompat;
@@ -142,9 +144,22 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
                 getResources().getColor(R.color.color5)
         };
 
+        /*TypedArray gradientArray = getResources().obtainTypedArray(R.array.drawable_gradients);
+        final int[] gradients = new int[gradientArray.length()];
+        for (int i = 0; i < gradientArray.length(); i++) {
+            gradients[i] = gradientArray.getResourceId(i, -1);
+        }
+        gradientArray.recycle();*/
+
+        final Drawable[] gradients = new Drawable[]{
+                getResources().getDrawable(R.drawable.gradient_orange),
+                getResources().getDrawable(R.drawable.gradient_blue)
+        };
+
         colors = colors_temp;
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
@@ -156,9 +171,15 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
                                     colors[position + 1]
                             )
                     );
+                    if(positionOffset==0)
+                    {
+                        relativeLayout.setBackground(gradients[position]);
+                    }
                 } else {
-                    relativeLayout.setBackgroundColor(colors[colors.length - 1]);
+                    //relativeLayout.setBackgroundColor(colors[colors.length - 1]);
+                    relativeLayout.setBackground(gradients[position]);
                 }
+
             }
 
             @Override
@@ -193,6 +214,9 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
 
     @Override
     protected void onDestroy() {
+        if(dataBaseHelper != null) {
+            dataBaseHelper.close();
+        }
         super.onDestroy();
         if (mToast != null) {
             mToast.cancel();

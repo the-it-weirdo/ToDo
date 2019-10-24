@@ -61,15 +61,15 @@ public class LoginActivity extends AppCompatActivity {
         else
         {
             /*
-            public static final String userDbIdColumn = "Id"; -> 1
-            public static final String userIdColumn = "UserId"; -> 2
-            public static final String userNameColumn = "UserName"; -> 3
-            public static final String userEmailColumn = "UserEmail"; -> 4
-            public static final String userPasswordColumn = "UserPassword"; -> 5
+            public static final String userDbIdColumn = "Id"; -> 0
+            public static final String userIdColumn = "UserId"; -> 1
+            public static final String userNameColumn = "UserName"; -> 2
+            public static final String userEmailColumn = "UserEmail"; -> 3
+            public static final String userPasswordColumn = "UserPassword"; -> 4
              */
-            Integer userId = Integer.parseInt(queryResult.getString(2));
-            String userName = queryResult.getString(3).trim();
-            String userEmail = queryResult.getString(4).trim();
+            Integer userId = Integer.parseInt(queryResult.getString(0));
+            String userName = queryResult.getString(2).trim();
+            String userEmail = queryResult.getString(3).trim();
 
             User user = new User(userId, userName, userEmail);
             Intent intent = new Intent(getApplicationContext(), SwipeMenuActivity.class);

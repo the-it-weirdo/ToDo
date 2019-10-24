@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_rl_view_category"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
@@ -9,121 +10,131 @@
     android:padding="10dp"
     tools:context=".ViewCategory">
 
-    <RelativeLayout
-        android:id="@+id/parent_rl_view_category"
+    <ImageView
+        android:id="@+id/categoryIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_work_32b1c4_24dp" />
+
+    <TextView
+        android:id="@+id/categoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/categoryIcon"
+        android:layout_toEndOf="@id/categoryIcon"
+        android:layout_toRightOf="@id/categoryIcon"
+        android:text="Work"
+        android:textSize="30sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/taskRemainingCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/categoryName"
+        android:layout_alignStart="@id/categoryName"
+        android:layout_alignLeft="@id/categoryName"
+        android:text="50 tasks remaining"
+        android:textSize="15sp" />
+
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/categoryIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_work_32b1c4_24dp" />
-
-        <TextView
-            android:id="@+id/categoryName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/categoryIcon"
-            android:layout_toEndOf="@id/categoryIcon"
-            android:layout_toRightOf="@id/categoryIcon"
-            android:text="Work"
-            android:textSize="30sp"
-            android:textStyle="bold|italic" />
-
-        <TextView
-            android:id="@+id/taskRemainingCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/categoryName"
-            android:layout_alignStart="@id/categoryName"
-            android:layout_alignLeft="@id/categoryName"
-            android:text="50 tasks remaining"
-            android:textSize="15sp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.20"
-            app:layout_constraintTop_toBottomOf="@id/taskRemainingCount" />
-
-        <TextView
-            android:id="@+id/remainingTaskHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/taskRemainingCount"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:text="Tasks Remaining"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/taskRemainingCount"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true">
 
         <RelativeLayout
-            android:id="@+id/rl1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/remainingTaskHeader">
+            android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/taskRemainingRecycler"
+            <TextView
+                android:id="@+id/remainingTaskHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Tasks Remaining"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/rl1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/remainingTaskHeader"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/taskRemainingRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="3dp"
+                    android:padding="5dp" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/completedTaskHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl1"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:text="Tasks Completed"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/completedTaskHeader"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_margin="3dp"
-                android:padding="5dp" />
-        </RelativeLayout>
+                android:layout_alignParentBottom="true">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/taskCompletedRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="3dp"
+                    android:padding="5dp" />
 
-        <TextView
-            android:id="@+id/completedTaskHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rl1"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:text="Tasks Completed"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/completedTaskHeader"
-            android:layout_alignParentBottom="true">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/taskCompletedRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="3dp"
-                android:padding="5dp" />
+            </RelativeLayout>
 
         </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addTaskFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom|end"
-            android:backgroundTint="@color/color5"
-            android:src="@drawable/ic_add_white_24dp" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addTaskFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:backgroundTint="@color/color5"
+        android:src="@drawable/ic_add_white_24dp" />
 
-    </RelativeLayout>
-
-</androidx.core.widget.NestedScrollView>
+</RelativeLayout>

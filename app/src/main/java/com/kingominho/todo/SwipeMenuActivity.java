@@ -80,7 +80,8 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
         }
         else
         {
-            user = new User(0, "Test", "Test");
+            user = new User("Test", "Test", "Test");
+            //user = new User(0, "Test", "Test");
             mBundle = user.toBundle();
         }
 
@@ -176,7 +177,8 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
     @Override
     public void onBackPressed() {
         if (mBackPressedOnce) {
-            super.onBackPressed();
+            //super.onBackPressed();
+            finish();
             return;
         }
         this.mBackPressedOnce = true;
@@ -204,7 +206,7 @@ public class SwipeMenuActivity extends AppCompatActivity implements Adapter.Adap
     public void onCardClick(String param, RelativeLayout view) {
         Intent intent = new Intent(getApplicationContext(), ViewCategory.class);
         mBundle.putString(ITEM_KEY, param);
-        mBundle.putString(TASK_REMAINING_KEY, String.valueOf(map.get(param)));
+        mBundle.putInt(TASK_REMAINING_KEY, map.get(param));
         intent.putExtras(mBundle);
 
         /*Pair[] pairs = new Pair[1];

@@ -38,12 +38,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        String sqlQueryToCreateTaskTable = "CREATE TABLE " + taskTableName + "(" + taskDbIdColumn + " INTEGER PRIMARY KEY AUTOINCREMENT," + taskIdColumn + " TEXT," +
-                taskTitleColumn + " TEXT," + taskCompletedColumn + " INTEGER DEFAULT 0," + taskUserIdColumn + " TEXT," + taskCategoryColumn + " TEXT)";
+        String sqlQueryToCreateTaskTable = "CREATE TABLE " + taskTableName + "(" +
+                taskDbIdColumn + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                taskIdColumn + " TEXT," +
+                taskTitleColumn + " TEXT," +
+                taskCompletedColumn + " INTEGER DEFAULT 0," +
+                taskUserIdColumn + " TEXT," +
+                taskCategoryColumn + " TEXT)";
         sqLiteDatabase.execSQL(sqlQueryToCreateTaskTable);
 
-        String sqlQueryToCreateUserTable = "CREATE TABLE " + userTableName + "(" + userDbIdColumn + " INTEGER PRIMARY KEY AUTOINCREMENT," + userIdColumn + " TEXT," +
-                userNameColumn+ " TEXT," + userEmailColumn + " TEXT," + userPasswordColumn + " TEXT)";
+        String sqlQueryToCreateUserTable = "CREATE TABLE " + userTableName + "(" +
+                userDbIdColumn + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                userIdColumn + " TEXT," +
+                userNameColumn+ " TEXT," +
+                userEmailColumn + " TEXT," +
+                userPasswordColumn + " TEXT)";
         sqLiteDatabase.execSQL(sqlQueryToCreateUserTable);
     }
 
@@ -99,14 +108,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put(taskUserIdColumn, task.getUserId());
         contentValues.put(taskCategoryColumn, task.getTaskCategory());
 
-        long res = database.update(taskTableName, contentValues, taskIdColumn+"=?", new String[] {String.valueOf(taskId).trim()});
+        long res = database.update(taskTableName, contentValues, taskDbIdColumn+"=?", new String[] {String.valueOf(taskId).trim()});
         return res > 0;
     }
 
     public Cursor getTask(int taskId)
     {
         SQLiteDatabase db=this.getWritableDatabase();
-        final String query = "select * from "+taskTableName+" where "+taskIdColumn+"='"+String.valueOf(taskId).trim()+"'";
+        final String query = "select * from "+taskTableName+" where "+taskDbIdColumn+"='"+String.valueOf(taskId).trim()+"'";
         Cursor res=db.rawQuery(query,null);
         return res;
     }
@@ -152,7 +161,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean deleteTask(int taskId)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        long res = db.delete(taskTableName, taskIdColumn + "=?", new String[]{String.valueOf(taskId).trim()});
+        long res = db.delete(taskTableName, taskDbIdColumn + "=?", new String[]{String.valueOf(taskId).trim()});
 
         return res > 0;
     }
@@ -187,14 +196,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put(userEmailColumn, user.getUserEmail());
         contentValues.put(userPasswordColumn, user.getUserPassword());
 
-        long res = database.update(userTableName, contentValues, userIdColumn+"=?", new String[] {String.valueOf(userId).trim()});
+        long res = database.update(userTableName, contentValues, userDbIdColumn+"=?", new String[] {String.valueOf(userId).trim()});
         return res > 0;
     }
 
     public Cursor getUser(int userId)
     {
         SQLiteDatabase db=this.getWritableDatabase();
-        final String query = "select * from "+userTableName+" where "+userIdColumn+"='"+String.valueOf(userId).trim()+"'";
+        final String query = "select * from "+userTableName+" where "+userDbIdColumn+"='"+String.valueOf(userId).trim()+"'";
         Cursor res=db.rawQuery(query,null);
         return res;
     }
@@ -219,7 +228,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean deleteUser(int userId)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        long res = db.delete(userTableName, userIdColumn + "=?", new String[]{String.valueOf(userId).trim()});
+        long res = db.delete(userTableName, userDbIdColumn + "=?", new String[]{String.valueOf(userId).trim()});
 
         return res > 0;
     }

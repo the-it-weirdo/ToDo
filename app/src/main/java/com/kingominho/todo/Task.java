@@ -28,7 +28,7 @@ class Task {
 
     Task(String tTITLE, boolean isCompleted, String uID, String category)
     {
-        this.taskId = this.getHashCode();
+        this.taskId = 0;
         this.taskTitle = tTITLE;
         this.taskCompleted = isCompleted;
         this.userId = uID;

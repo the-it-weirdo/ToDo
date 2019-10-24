@@ -27,7 +27,8 @@ class User {
         this.userEmail = userEmail;
         this.userName = userName;
         this.userPassword = userPassword;
-        this.userId = this.getHashCode();
+        //this.userId = this.getHashCode();
+        this.userId = 0;
     }
 
     User(Integer userId, String userEmail, String userName)

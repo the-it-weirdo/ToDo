@@ -39,6 +39,7 @@ public class ViewCategory extends AppCompatActivity {
     private User user;
     private Bundle mBundle;
     private String category, taskRemaining;
+    private  int tRem;
 
     private TextView categoryName, remainingTask;
     private ImageView categoryIcon;
@@ -51,7 +52,7 @@ public class ViewCategory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_category);
-        supportPostponeEnterTransition();
+        //supportPostponeEnterTransition();
 
         relativeLayout = findViewById(R.id.parent_rl_view_category);
         dataBaseHelper = new DataBaseHelper(getApplicationContext());
@@ -69,22 +70,23 @@ public class ViewCategory extends AppCompatActivity {
             String userEmail = mBundle.getString(User.USER_EMAIL_KEY);
             user = new User(userId, userEmail, userName);
             category = mBundle.getString(SwipeMenuActivity.ITEM_KEY);
-            taskRemaining = mBundle.getString(SwipeMenuActivity.TASK_REMAINING_KEY);
+            tRem = mBundle.getInt(SwipeMenuActivity.TASK_REMAINING_KEY);
+            taskRemaining = tRem +" tasks remaining";
         } else {
-            user = new User(0, "Test", "Test");
+            user = new User("Test", "Test", "Test");
             category = "Test";
             mBundle = user.toBundle();
             mBundle.putString(SwipeMenuActivity.ITEM_KEY, category);
         }
+
         categoryName.setText(category);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
             relativeLayout.setTransitionName(categoryName.getText().toString());
         }
 
-        supportStartPostponedEnterTransition();
+        //supportStartPostponedEnterTransition();
 
-        String str = taskRemaining + " tasks remaining.";
-        remainingTask.setText(str);
+        remainingTask.setText(taskRemaining);
 
         if (category.equals("Work")) {
             categoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_work_32b1c4_24dp));
@@ -134,6 +136,7 @@ public class ViewCategory extends AppCompatActivity {
     private void addTaskActivity()
     {
         Intent intent = new Intent(getApplicationContext(), AddTaskActivity.class);
+        mBundle.putInt(SwipeMenuActivity.TASK_REMAINING_KEY, mTaskListRemaining.size());
         intent.putExtras(mBundle);
         if(Build.VERSION.SDK_INT>=21)
         {
@@ -164,7 +167,7 @@ public class ViewCategory extends AppCompatActivity {
                 public static final String taskUserIdColumn = "UserId";
                 public static final String taskCategoryColumn = "TaskCategory";
              */
-            String taskId = queryResult.getString(1);
+            String taskId = queryResult.getString(0);
             String taskTitle = queryResult.getString(2);
 
             //Task(Integer taskId, String tTITLE, boolean isCompleted, String uID, String category)

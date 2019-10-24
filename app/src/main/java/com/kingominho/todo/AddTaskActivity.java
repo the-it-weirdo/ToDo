@@ -1,6 +1,7 @@
 package com.kingominho.todo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Build;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 public class AddTaskActivity extends AppCompatActivity {
 
     private User user;
@@ -20,6 +23,8 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private TextView categoryName, userName;
     private EditText newTaskTitle;
+    private ShimmerFrameLayout container;
+    private ConstraintLayout constraintLayout;
     private ImageButton addTaskButton;
     private DataBaseHelper dataBaseHelper;
 
@@ -33,6 +38,8 @@ public class AddTaskActivity extends AppCompatActivity {
         userName = findViewById(R.id.userName);
         newTaskTitle = findViewById(R.id.newTaskTitle);
         addTaskButton = findViewById(R.id.addTaskButton);
+        container = findViewById(R.id.shimmer_container);
+        constraintLayout = findViewById(R.id.addTaskParent);
 
         mBundle = getIntent().getExtras();
         if (mBundle != null) {
@@ -75,6 +82,10 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private void addNewTask(String newTask)
     {
+        //constraintLayout.setVisibility(View.GONE);
+        container.setAlpha(1);
+        container.startShimmer();
+
         Task mTask = new Task(newTask, false, String.valueOf(user.getUserId()), category);
         dataBaseHelper.insertTask(mTask);
 
@@ -83,10 +94,21 @@ public class AddTaskActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent i = new Intent(getApplicationContext(), ViewCategory.class);
+                mBundle.putInt(SwipeMenuActivity.TASK_REMAINING_KEY, mBundle.getInt(SwipeMenuActivity.TASK_REMAINING_KEY)+1);
                 i.putExtras(mBundle);
                 startActivity(i);
+                container.stopShimmer();
                 finish();
             }
         }, 1500);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(getApplicationContext(), ViewCategory.class);
+        i.putExtras(mBundle);
+        startActivity(i);
+        container.stopShimmer();
+        finish();
     }
 }
